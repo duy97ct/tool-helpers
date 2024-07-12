@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển đổi PDF sang Ảnh</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .tool-button {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .tool-icon {
+            margin-right: 5px;
+        }
+        .image-container {
+            margin-top: 20px;
+        }
+        .original-image {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .converted-image {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: darkblue;" class="my-4">Chuyển đổi PDF sang Ảnh</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" action="/pdf2image" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="pdfFile">Chọn File:</label>
+                        <input type="file" class="form-control-file" id="pdfFile" name="pdf" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-3">Chuyển đổi định dạng</button>
+                    <br>
+                    <a href="/" class="tool-button mt-2">
+                        <span class="tool-icon">←</span>
+                        Quay lại
+                    </a>
+                </form>
+                {% if image_url %}
+                <button type="button" class="btn btn-success mt-3" onclick="downloadImage('{{ image_url }}')">
+                    Download Image
+                </button>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-6">
+                <h3>Kết Quả:</h3>
+                <div class="converted-image">
+                    {% if image_url %}
+                        <img src="{{ image_url }}" class="img-fluid" alt="Kết Quả">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="alert alert-danger">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
+    </div>
+
+    <script>
+        function downloadImage(imageUrl) {
+            var link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = 'converted_image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-b4A7jRgcyJWB1FlEoEjZeYUnjwPZcB4rnrmnUVwBhO+6z0wPq3cLr5qd/0JcXxCr" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh/jLGBTQ+Y3OvI3UjLIZcAazfDDN9aHpuuXr" crossorigin="anonymous"></script>
+</body>
+</html>

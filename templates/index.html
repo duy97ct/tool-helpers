@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TỔNG HỢP CÁC CÔNG CỤ</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .tool-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .tool-button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+            border: 1px solid #007bff;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .tool-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+        }
+        .tool-icon {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: darkblue;">TỔNG HỢP CÁC CÔNG CỤ - CTICT</h1>
+    <div class="tool-container">
+        <a href="/tachnen" class="tool-button">
+            <span class="tool-icon">🖼️</span>
+            Tách nền ảnh
+        </a>
+        <a href="/pdf2image" class="tool-button">
+            <span class="tool-icon">🖼️</span>
+            PDF to Image
+        </a>
+        <a href="https://ca.gov.vn/page/taitainguyen/PM" class="tool-button">
+            <span class="tool-icon">🔑</span>
+            Bộ cài ký số
+        </a>
+        <a href="#" class="tool-button">
+            <span class="tool-icon" onclick="showPopup()">✍️</span>
+            Chuyển ảnh thành văn bản
+        </a>
+        
+        <!-- Thêm các nút cho công cụ khác ở đây -->
+    </div>
+    <footer>
+        &copy; 2024 CTICT. All rights reserved.
+    </footer>
+
+<script>
+    function showPopup() {
+            alert("Tính năng đang phát triển. Vui lòng quay lại sau...!");
+        }
+</script>    
+
+</body>
+</html>
+
