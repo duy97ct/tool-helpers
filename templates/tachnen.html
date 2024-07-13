@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Background Remover</title>
     <style>
-        /* CSS styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
+        
         .container {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -23,21 +23,27 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
+        
         .column {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+        
         .column:nth-child(2) {
             justify-content: center;
         }
+        
         .column h2 {
             color: darkblue;
             margin-bottom: 10px;
+            text-align: center;
         }
+        
         .controls {
             margin-bottom: 20px;
         }
+        
         .preview-container {
             display: flex;
             justify-content: center;
@@ -48,10 +54,12 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        
         .preview-image {
             max-width: 100%;
             max-height: 300px; /* Giới hạn chiều cao */
         }
+        
         .custom-file-upload {
             display: inline-block;
             padding: 10px 20px;
@@ -62,14 +70,17 @@
             color: white;
             margin-bottom: 10px;
         }
+        
         .custom-file-upload:hover {
             background-color: #0056b3;
         }
+        
         .back-button-container {
             grid-column: 1 / span 3;
             text-align: center;
             margin-bottom: 20px;
         }
+        
         .back-button {
             display: inline-block;
             padding: 10px 20px;
@@ -79,23 +90,29 @@
             background-color: red;
             color: yellow;
             margin-top: 10px;
-            position: relative;
             text-align: center;
         }
-        
         
         .back-button:hover {
             background-color: orangered;
         }
+        
         .title-container {
-            display: flex;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
+            text-align: center;
             margin-bottom: 20px;
         }
+        
         .title-container h2 {
             margin: 0;
             color: darkblue;
+        }
+        
+        .title-container h2:nth-child(3) {
+            text-align: left;
+            margin-left: 100px; /* Điều chỉnh khoảng cách này theo nhu cầu */
         }
     </style>
 </head>
@@ -115,42 +132,37 @@
             <form method="POST" enctype="multipart/form-data" id="imageForm">
                 <label class="custom-file-upload">
                     <input type="file" name="image" accept="image/*" required onchange="previewFile()">
-                    
                 </label>
-                <!-- <div class="path-display" id="file-path"></div> -->
-                 <br>
+                <br>
                 <label style="font-weight: bold;" for="thresholdRange">Ngưỡng xóa nền:</label>
-                <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="200" onchange="updateThresholdValue(this.value)">
-                <span id="thresholdValue">200</span>
+                <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="160" onchange="updateThresholdValue(this.value)">
+                <span id="thresholdValue">160</span>
                 <div class="button-container">
                     <!-- Nút xem trước -->
                     <button type="button" onclick="previewAndSubmit()" style="display: inline-block; padding: 10px 20px; cursor: pointer; border: none;
                                                                                 border-radius: 4px; background-color: green; color: yellow;
-                                                                                        margin-top: 10px; width: 200px">Xem trước</button>
+                                                                                margin-top: 10px; width: 200px">Xem trước</button>
                     <br>
-                                                                                        <!-- Nút tải về -->
-                    <button id="downloadButton" style="display: inline-block; padding: 10px 20px; cursor: pointer; border: none;
-                                                        border-radius: 4px; background-color: orange; color: yellow; margin-top: 10px; width: 150px">
-                                                        Tải ảnh đã xử lý</button>
-
+                    <!-- Nút tải về -->
+                    <button id="downloadButton" style="display: none; padding: 10px 20px; cursor: pointer; border: none;
+                                                      border-radius: 4px; background-color: orange; color: yellow; margin-top: 10px; width: 150px">
+                                                      Tải ảnh đã xử lý</button>
                     <br>
                     <a style="width: 70px; height:15px" href="/" class="back-button">Quay lại</a>
+                    
                 </div>
             </form>
-            
         </div>
-
         <!-- Column 2: Original Image -->
         <div class="column">
             <div class="preview-container">
-                <img id="preview-image" class="preview-image" src="#" alt="Preview Image">
+                <img id="preview-image" class="preview-image" src="#" alt="Preview Image" style="display: none;">
             </div>
         </div>
-        
         <!-- Column 3: Processed Image Preview -->
         <div class="column">
             <div class="preview-container">
-                <img id="processed-preview" class="preview-image" src="#" alt="Processed Image">
+                <img id="processed-preview" class="preview-image" src="#" alt="Processed Image" style="display: none;">
             </div>
         </div>
     </div>
@@ -159,35 +171,32 @@
         function previewFile() {
             const file = document.querySelector('input[type=file]').files[0];
             const preview = document.getElementById('preview-image');
-            const filePathDisplay = document.getElementById('file-path');
             const reader = new FileReader();
-
+    
             reader.addEventListener("load", function () {
                 preview.src = reader.result;
                 preview.style.display = 'block';
             }, false);
-
+    
             if (file) {
                 reader.readAsDataURL(file);
-                filePathDisplay.textContent = file.name;
             } else {
                 preview.style.display = 'none';
-                filePathDisplay.textContent = '';
             }
         }
-
+    
         // Cập nhật giá trị ngưỡng và hiển thị lên giao diện
         function updateThresholdValue(value) {
             document.getElementById('thresholdValue').textContent = value;
         }
-
+    
         // Xem trước ảnh và hiển thị phần xử lý
         function previewAndSubmit() {
             const file = document.querySelector('input[type=file]').files[0];
             const formData = new FormData();
             formData.append('image', file);
             formData.append('threshold', document.getElementById('thresholdRange').value);
-
+    
             fetch('/tachnen', {
                 method: 'POST',
                 body: formData
@@ -196,6 +205,7 @@
             .then(blob => {
                 const processedPreview = document.getElementById('processed-preview');
                 processedPreview.src = URL.createObjectURL(blob);
+                processedPreview.style.display = 'block';
                 document.getElementById('downloadButton').style.display = 'block';
             })
             .catch(error => {
@@ -203,34 +213,33 @@
                 alert('Failed to preview and process the image.');
             });
         }
-
-        // Tải ảnh đã xử lý
+    
+        // Sự kiện khi thay đổi giá trị trên thanh trượt
+        document.getElementById('thresholdRange').addEventListener('input', function() {
+            updateThresholdValue(this.value); // Cập nhật giá trị ngưỡng
+        });
+    
+        // Sự kiện khi nhấn nút Tải ảnh đã xử lý
         document.getElementById('downloadButton').addEventListener('click', function() {
             const processedPreview = document.getElementById('processed-preview');
             const url = processedPreview.src;
-            const originalFilename = document.getElementById('imageForm').getAttribute('data-filename');
-            const filename = `${originalFilename}_tach_nen.png`;
+            const originalFilename = document.querySelector('input[type=file]').files[0].name;
+            const filename = `${originalFilename.split('.')[0]}_tach_nen.png`;
+            
             fetch(url)
-            .then(response => {
-                if (response.ok) {
-                    return response.blob();
-                }
-                throw new Error('Network response was not ok.');
-            })
-            .then(blob => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to download the processed image.');
-            });
+                .then(response => response.blob())
+                .then(blob => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = filename;
+                    link.click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to download the processed image.');
+                });
         });
-
-
-
     </script>
+    
 </body>
 </html>

@@ -23,16 +23,25 @@ CONVERTAPI_SECRET = 'RUMrVe9vYn2ZUICI'
 convertapi.api_secret = CONVERTAPI_SECRET
 
 # Hàm loại bỏ nền của ảnh sử dụng OpenCV
-# Hàm loại bỏ nền của ảnh sử dụng OpenCV và ngưỡng từ request
+import cv2
+import numpy as np
+
 def remove_background(image_bytes, threshold=200):
     try:
+        # Đọc ảnh từ byte
         nparr = np.frombuffer(image_bytes, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+
+        # Chuyển đổi sang ảnh xám
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        blurred = cv2.GaussianBlur(gray, (15, 15), 0)
-        _, mask = cv2.threshold(blurred, threshold, 255, cv2.THRESH_BINARY_INV)
-        result = cv2.bitwise_and(image, image, mask=mask)
+
+        # Áp dụng ngưỡng để tạo mặt nạ
+        _, mask = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
+
+        # Tạo ảnh alpha để giữ lại nền trong suốt
+        b, g, r = cv2.split(image)
+        alpha = cv2.bitwise_not(mask)
+        result = cv2.merge([b, g, r, alpha])
 
         # Chuyển đổi ảnh thành mảng byte để gửi về client
         _, img_encoded = cv2.imencode('.png', result)
@@ -41,7 +50,6 @@ def remove_background(image_bytes, threshold=200):
     except Exception as e:
         print(f"Exception: {e}")
         return None
-
 
 
 # Hàm chuyển đổi PDF sang PNG sử dụng ConvertAPI
@@ -69,20 +77,17 @@ def tachnen():
     if request.method == 'POST':
         file = request.files.get('image')
         if file:
-            try:
-                image_bytes = file.read()
-                threshold = int(request.form.get('threshold', 200))
-                original_filename = secure_filename(file.filename)
-                processed_file = remove_background(image_bytes, threshold=threshold)
-                if processed_file:
-                    processed_filename = f"{os.path.splitext(original_filename)[0]}_tach_nen.png"
-                    return send_file(io.BytesIO(processed_file), mimetype='image/png', as_attachment=True, download_name=processed_filename)
-                else:
-                    flash("Failed to process image. Please try again.")
-                    return redirect(url_for('tachnen'))
-            except Exception as e:
-                print(f"Error processing image: {e}")
-                flash("Error processing image. Please try again.")
+            image_bytes = file.read()
+            threshold = int(request.form.get('threshold', 200))  # Nhận giá trị ngưỡng từ request
+            processed_file = remove_background(image_bytes, threshold=threshold)
+            if processed_file:
+                # Lấy tên gốc của file
+                original_filename = file.filename.rsplit('.', 1)[0]
+                # Tạo tên file mới
+                download_name = f'{original_filename}_tach_nen.png'
+                return send_file(io.BytesIO(processed_file), mimetype='image/png', as_attachment=True, download_name=download_name)
+            else:
+                flash("Failed to process image. Please try again.")
                 return redirect(url_for('tachnen'))
         else:
             flash("No file uploaded. Please upload an image.")
