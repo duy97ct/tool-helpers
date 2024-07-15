@@ -19,6 +19,13 @@ function previewFile() {
 // Cập nhật giá trị ngưỡng và hiển thị lên giao diện
 function updateThresholdValue(value) {
     document.getElementById('thresholdValue').textContent = value;
+    updateAndPreview(); // Gọi hàm updateAndPreview khi thay đổi giá trị ngưỡng
+}
+
+// Cập nhật giá trị vị trí và hiển thị lên giao diện
+function updatePosition(position, value) {
+    document.getElementById(position + 'Value').textContent = value;
+    updateAndPreview(); // Gọi hàm updateAndPreview khi thay đổi giá trị vị trí
 }
 
 // Hàm để cập nhật và xem trước ảnh khi kéo thanh trượt
@@ -47,12 +54,6 @@ function updateAndPreview() {
         console.error('Error:', error);
         alert('Failed to preview and process the image.');
     });
-}
-
-// Cập nhật giá trị vị trí và hiển thị lên giao diện
-function updatePosition(position, value) {
-    document.getElementById(position + 'Value').textContent = value;
-    updateAndPreview(); // Gọi hàm updateAndPreview khi thay đổi giá trị thanh trượt
 }
 
 // Xem trước ảnh và hiển thị phần xử lý
