@@ -128,11 +128,9 @@
             border-radius: 4px;
         }
     </style>
-    
 </head>
 <body>
     <div class="back-button-container">
-        <!-- <a href="/" class="back-button">Quay lại</a> -->
     </div>
     <h1 style="text-align: center; color:darkred">PHẦN MỀM TÁCH NỀN ẢNH TỰ ĐỘNG</h1>
     <div class="title-container">
@@ -154,19 +152,19 @@
                 <br><br>
                 <fieldset class="crop-anh">
                     <legend style="font-weight: bold; color: darkblue">Crop ảnh</legend>
-                    <label style="font-weight: bold; color: darkblue" for="leftRange">Trái:</label>
+                    <label style="font-weight: bold; color: darkblue" for="leftRange">Crop từ Trái qua:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input type="range" id="leftRange" name="left" min="0" max="100" value="0" oninput="updatePosition('left', this.value)">
                     <span id="leftValue">0</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="rightRange">Phải:</label>
+                    <label style="font-weight: bold; color: darkblue" for="rightRange">Crop từ Phải qua:&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input type="range" id="rightRange" name="right" min="0" max="100" value="100" oninput="updatePosition('right', this.value)">
                     <span id="rightValue">100</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="topRange">Trên:</label>
+                    <label style="font-weight: bold; color: darkblue" for="topRange">Crop từ Trên xuống:</label>
                     <input type="range" id="topRange" name="top" min="0" max="100" value="0" oninput="updatePosition('top', this.value)">
                     <span id="topValue">0</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="bottomRange">Dưới:</label>
+                    <label style="font-weight: bold; color: darkblue" for="bottomRange">Crop từ Dưới lên:&nbsp;&nbsp;&nbsp;&nbsp;</label>
                     <input type="range" id="bottomRange" name="bottom" min="0" max="100" value="100" oninput="updatePosition('bottom', this.value)">
                     <span id="bottomValue">100</span>
                 </fieldset>
@@ -201,83 +199,6 @@
             </div>
         </div>
     </div>
-    <script>
-        // JavaScript để xem trước ảnh và cập nhật ngưỡng
-        function previewFile() {
-            const file = document.querySelector('input[type=file]').files[0];
-            const preview = document.getElementById('preview-image');
-            const reader = new FileReader();
-    
-            reader.addEventListener("load", function () {
-                preview.src = reader.result;
-                preview.style.display = 'block';
-            }, false);
-    
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-            }
-        }
-    
-        // Cập nhật giá trị ngưỡng và hiển thị lên giao diện
-        function updateThresholdValue(value) {
-            document.getElementById('thresholdValue').textContent = value;
-        }
-    
-        // Cập nhật giá trị vị trí và hiển thị lên giao diện
-        function updatePosition(position, value) {
-            document.getElementById(position + 'Value').textContent = value;
-        }
-
-        // Xem trước ảnh và hiển thị phần xử lý
-        function previewAndSubmit() {
-            const file = document.querySelector('input[type=file]').files[0];
-            const formData = new FormData();
-            formData.append('image', file);
-            formData.append('threshold', document.getElementById('thresholdRange').value);
-            formData.append('left', document.getElementById('leftRange').value);
-            formData.append('right', document.getElementById('rightRange').value);
-            formData.append('top', document.getElementById('topRange').value);
-            formData.append('bottom', document.getElementById('bottomRange').value);
-    
-            fetch('/tachnen', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                const processedPreview = document.getElementById('processed-preview');
-                processedPreview.src = URL.createObjectURL(blob);
-                processedPreview.style.display = 'block';
-                document.getElementById('downloadButton').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to preview and process the image.');
-            });
-        }
-    
-        // Sự kiện khi nhấn nút Tải ảnh đã xử lý
-        document.getElementById('downloadButton').addEventListener('click', function() {
-            const processedPreview = document.getElementById('processed-preview');
-            const url = processedPreview.src;
-            const originalFilename = document.querySelector('input[type=file]').files[0].name;
-            const filename = `${originalFilename.split('.')[0]}_tach_nen.png`;
-            
-            fetch(url)
-                .then(response => response.blob())
-                .then(blob => {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = filename;
-                    link.click();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to download the processed image.');
-                });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='crop.js') }}"></script>
 </body>
 </html>

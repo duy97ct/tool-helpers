@@ -101,6 +101,26 @@ def tachnen():
             return redirect(url_for('tachnen'))
     return render_template('tachnen.html')
 
+@app.route('/crop_preview', methods=['POST'])
+def crop_preview():
+    image = request.files['image']
+    threshold = int(request.form['threshold'])
+    left = int(request.form['left'])
+    right = int(request.form['right'])
+    top = int(request.form['top'])
+    bottom = int(request.form['bottom'])
+    
+    # Sử dụng hàm remove_background để xử lý ảnh
+    image_bytes = image.read()
+    processed_file = remove_background(image_bytes, threshold, left, right, top, bottom)
+    
+    if processed_file:
+        return send_file(io.BytesIO(processed_file), mimetype='image/png')
+    else:
+        flash("Failed to process image preview. Please try again.")
+        return redirect(url_for('tachnen'))
+
+
 @app.route('/pdf2image', methods=['GET', 'POST'])
 def pdf2image():
     if request.method == 'POST':
