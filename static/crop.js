@@ -56,6 +56,23 @@ function updateAndPreview() {
     });
 }
 
+// Hàm tăng giá trị của thanh trượt
+function incrementSlider(sliderId) {
+    let slider = document.getElementById(sliderId);
+    let currentValue = parseInt(slider.value);
+    slider.value = currentValue + 1;
+    updatePosition(sliderId.replace('Range', ''), slider.value); // Gọi hàm updatePosition để cập nhật giá trị
+}
+
+// Hàm giảm giá trị của thanh trượt
+function decrementSlider(sliderId) {
+    let slider = document.getElementById(sliderId);
+    let currentValue = parseInt(slider.value);
+    slider.value = currentValue - 1;
+    updatePosition(sliderId.replace('Range', ''), slider.value); // Gọi hàm updatePosition để cập nhật giá trị
+}
+
+
 // Xem trước ảnh và hiển thị phần xử lý
 function previewAndSubmit() {
     const file = document.querySelector('input[type=file]').files[0];

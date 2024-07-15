@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tách nền ảnh</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-P35IUXjZB8p/0+emA4mmCvSlZ6YCNf3Y9MCr3APce+FlzBVYiLHyBUd7XucJ1BoS/66v/MKkKg0Zj1LpFpebFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,6 +70,7 @@
             background-color: #007bff;
             color: white;
             margin-bottom: 10px;
+            width: 230px;
         }
         
         .custom-file-upload:hover {
@@ -102,7 +104,8 @@
             grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
+            
         }
         
         .title-container h2 {
@@ -127,11 +130,69 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .slider-container > * {
+            margin-right: 10px;
+        }
+        
+        .arrow-up, .arrow-down {
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+        
+        .arrow-down {
+            margin-left: 0px; /* Điều chỉnh khoảng cách giữa mũi tên */
+        }
+        
+        fieldset {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+            width: 250px; /* Điều chỉnh chiều rộng của fieldset */
+            padding: 5px; /* Khoảng cách giữa các phần tử trong fieldset */
+        }
+        
+        legend {
+            font-weight: bold;
+            color: darkblue;
+            margin-bottom: 10px; /* Khoảng cách giữa legend và các phần tử khác */
+        }
+        
+        label {
+            font-weight: bold;
+            color: darkblue;
+            display: inline-block;
+            width: 150px; /* Điều chỉnh chiều rộng của label */
+        }
+        
+        input[type=range] {
+            width: calc(100% - 70px); /* Điều chỉnh chiều rộng của thanh trượt */
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .arrow-up,
+        .arrow-down {
+            font-size: 13px;
+            cursor: pointer;
+            vertical-align: middle;
+            margin-left: 0px; /* Khoảng cách giữa mũi tên và số giá trị */
+        }
+        
     </style>
 </head>
 <body>
-    <div class="back-button-container">
-    </div>
     <h1 style="text-align: center; color:darkred">PHẦN MỀM TÁCH NỀN ẢNH TỰ ĐỘNG</h1>
     <div class="title-container">
         <h2>Điều khiển</h2>
@@ -149,27 +210,34 @@
                 <label style="font-weight: bold;color: darkblue" for="thresholdRange">Ngưỡng xóa nền:</label>
                 <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="160" oninput="updateThresholdValue(this.value)">
                 <span id="thresholdValue">160</span>
-                <br><br>
+                <br>
                 <fieldset class="crop-anh">
-                    <legend style="font-weight: bold; color: darkblue">Crop ảnh</legend>
-                    <label style="font-weight: bold; color: darkblue" for="leftRange">Cắt từ Trái qua:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <legend>Crop ảnh</legend>
+                    <label for="leftRange">Từ Trái qua:</label>
                     <input type="range" id="leftRange" name="left" min="0" max="100" value="0" oninput="updatePosition('left', this.value)">
                     <span id="leftValue">0</span>
+                    <span class="arrow-up" onclick="incrementSlider('leftRange')">▲</span>
+                    <span class="arrow-down" onclick="decrementSlider('leftRange')">▼</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="rightRange">Cắt từ Phải qua:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <label for="rightRange">Từ Phải qua:</label>
                     <input type="range" id="rightRange" name="right" min="0" max="100" value="100" oninput="updatePosition('right', this.value)">
                     <span id="rightValue">100</span>
+                    <span class="arrow-up" onclick="incrementSlider('rightRange')">▲</span>
+                    <span class="arrow-down" onclick="decrementSlider('rightRange')">▼</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="topRange">Cắt từ Trên xuống:</label>
+                    <label for="topRange">Từ Trên xuống:</label>
                     <input type="range" id="topRange" name="top" min="0" max="100" value="0" oninput="updatePosition('top', this.value)">
                     <span id="topValue">0</span>
+                    <span class="arrow-up" onclick="incrementSlider('topRange')">▲</span>
+                    <span class="arrow-down" onclick="decrementSlider('topRange')">▼</span>
                     <br>
-                    <label style="font-weight: bold; color: darkblue" for="bottomRange">Cắt từ Dưới lên:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <label for="bottomRange">Từ Dưới lên:</label>
                     <input type="range" id="bottomRange" name="bottom" min="0" max="100" value="100" oninput="updatePosition('bottom', this.value)">
                     <span id="bottomValue">100</span>
+                    <span class="arrow-up" onclick="incrementSlider('bottomRange')">▲</span>
+                    <span class="arrow-down" onclick="decrementSlider('bottomRange')">▼</span>
                 </fieldset>
                 
-
                 <div class="button-container">
                     <!-- Nút xem trước -->
                     <button type="button" onclick="previewAndSubmit()" style="display: inline-block; padding: 10px 20px; cursor: pointer; border: none;
@@ -180,7 +248,7 @@
                     <button id="downloadButton" style="display:block; padding: 10px 20px; cursor: pointer; border: none;
                                                       border-radius: 4px; background-color: orange; color: black; margin-top: 10px; width: 150px">
                                                       Tải ảnh đã xử lý</button>
-                    <br>
+                    
                     <a style="width: 70px; height:15px" href="/" class="back-button">Quay lại</a>
                     
                 </div>
