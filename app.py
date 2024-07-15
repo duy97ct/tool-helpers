@@ -8,7 +8,6 @@ import convertapi
 import cv2
 import numpy as np
 
-
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
@@ -16,30 +15,34 @@ UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# API Key của Remove.bg và ConvertAPI
-# API_KEY_REMOVE_BG = '9xgSWw4YiSvStys1iEFrrM7g' # API miễn phí nên mỗi tháng chỉ có 50 lượt dùng chùa
+# API Key của ConvertAPI
 CONVERTAPI_SECRET = 'RUMrVe9vYn2ZUICI'
 
 convertapi.api_secret = CONVERTAPI_SECRET
 
 # Hàm loại bỏ nền của ảnh sử dụng OpenCV
-import cv2
-import numpy as np
-
-def remove_background(image_bytes, threshold=200):
+def remove_background(image_bytes, threshold=200, left=0, right=100, top=0, bottom=100):
     try:
         # Đọc ảnh từ byte
         nparr = np.frombuffer(image_bytes, np.uint8)
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+        # Cắt ảnh theo vị trí đã chọn
+        height, width = image.shape[:2]
+        left_px = int(width * (left / 100))
+        right_px = int(width * (right / 100))
+        top_px = int(height * (top / 100))
+        bottom_px = int(height * (bottom / 100))
+        cropped_image = image[top_px:bottom_px, left_px:right_px]
+
         # Chuyển đổi sang ảnh xám
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
 
         # Áp dụng ngưỡng để tạo mặt nạ
         _, mask = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
 
         # Tạo ảnh alpha để giữ lại nền trong suốt
-        b, g, r = cv2.split(image)
+        b, g, r = cv2.split(cropped_image)
         alpha = cv2.bitwise_not(mask)
         result = cv2.merge([b, g, r, alpha])
 
@@ -79,7 +82,11 @@ def tachnen():
         if file:
             image_bytes = file.read()
             threshold = int(request.form.get('threshold', 200))  # Nhận giá trị ngưỡng từ request
-            processed_file = remove_background(image_bytes, threshold=threshold)
+            left = int(request.form.get('left', 0))
+            right = int(request.form.get('right', 100))
+            top = int(request.form.get('top', 0))
+            bottom = int(request.form.get('bottom', 100))
+            processed_file = remove_background(image_bytes, threshold=threshold, left=left, right=right, top=top, bottom=bottom)
             if processed_file:
                 # Lấy tên gốc của file
                 original_filename = file.filename.rsplit('.', 1)[0]

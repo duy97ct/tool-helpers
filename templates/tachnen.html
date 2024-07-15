@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Remover</title>
+    <title>Tách nền ảnh</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,7 +30,7 @@
             align-items: center;
         }
         
-        .column:nth-child(2) {
+        .column:nth-child(2), .column:nth-child(3) {
             justify-content: center;
         }
         
@@ -114,7 +114,21 @@
             text-align: left;
             margin-left: 100px; /* Điều chỉnh khoảng cách này theo nhu cầu */
         }
+        
+        /* Căn giữa ảnh trong cột 2 và cột 3 */
+        .column:nth-child(2) .preview-container,
+        .column:nth-child(3) .preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
+    
 </head>
 <body>
     <div class="back-button-container">
@@ -135,8 +149,29 @@
                 </label>
                 <br>
                 <label style="font-weight: bold;" for="thresholdRange">Ngưỡng xóa nền:</label>
-                <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="160" onchange="updateThresholdValue(this.value)">
+                <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="160" oninput="updateThresholdValue(this.value)">
                 <span id="thresholdValue">160</span>
+                <br><br>
+                <fieldset class="crop-anh">
+                    <legend style="font-weight: bold; color: darkblue">Crop ảnh</legend>
+                    <label style="font-weight: bold; color: darkblue" for="leftRange">Trái:</label>
+                    <input type="range" id="leftRange" name="left" min="0" max="100" value="0" oninput="updatePosition('left', this.value)">
+                    <span id="leftValue">0</span>
+                    <br>
+                    <label style="font-weight: bold; color: darkblue" for="rightRange">Phải:</label>
+                    <input type="range" id="rightRange" name="right" min="0" max="100" value="100" oninput="updatePosition('right', this.value)">
+                    <span id="rightValue">100</span>
+                    <br>
+                    <label style="font-weight: bold; color: darkblue" for="topRange">Trên:</label>
+                    <input type="range" id="topRange" name="top" min="0" max="100" value="0" oninput="updatePosition('top', this.value)">
+                    <span id="topValue">0</span>
+                    <br>
+                    <label style="font-weight: bold; color: darkblue" for="bottomRange">Dưới:</label>
+                    <input type="range" id="bottomRange" name="bottom" min="0" max="100" value="100" oninput="updatePosition('bottom', this.value)">
+                    <span id="bottomValue">100</span>
+                </fieldset>
+                
+
                 <div class="button-container">
                     <!-- Nút xem trước -->
                     <button type="button" onclick="previewAndSubmit()" style="display: inline-block; padding: 10px 20px; cursor: pointer; border: none;
@@ -190,12 +225,21 @@
             document.getElementById('thresholdValue').textContent = value;
         }
     
+        // Cập nhật giá trị vị trí và hiển thị lên giao diện
+        function updatePosition(position, value) {
+            document.getElementById(position + 'Value').textContent = value;
+        }
+
         // Xem trước ảnh và hiển thị phần xử lý
         function previewAndSubmit() {
             const file = document.querySelector('input[type=file]').files[0];
             const formData = new FormData();
             formData.append('image', file);
             formData.append('threshold', document.getElementById('thresholdRange').value);
+            formData.append('left', document.getElementById('leftRange').value);
+            formData.append('right', document.getElementById('rightRange').value);
+            formData.append('top', document.getElementById('topRange').value);
+            formData.append('bottom', document.getElementById('bottomRange').value);
     
             fetch('/tachnen', {
                 method: 'POST',
@@ -213,11 +257,6 @@
                 alert('Failed to preview and process the image.');
             });
         }
-    
-        // Sự kiện khi thay đổi giá trị trên thanh trượt
-        document.getElementById('thresholdRange').addEventListener('input', function() {
-            updateThresholdValue(this.value); // Cập nhật giá trị ngưỡng
-        });
     
         // Sự kiện khi nhấn nút Tải ảnh đã xử lý
         document.getElementById('downloadButton').addEventListener('click', function() {
@@ -240,6 +279,5 @@
                 });
         });
     </script>
-    
 </body>
 </html>
