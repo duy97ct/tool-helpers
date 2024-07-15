@@ -190,6 +190,11 @@
             cursor: pointer;
             vertical-align: middle;
             margin-left: 0px; /* Khoảng cách giữa mũi tên và số giá trị */
+            user-select: none; /* Ngăn chặn việc bôi đen văn bản */
+            cursor: pointer; /* Đổi con trỏ thành hình tay chỉ khi hover */
+        }
+        .arrow-up:active, .arrow-down:active {
+            outline: none; /* Loại bỏ viền khi nhấn chuột */
         }
         .crop-anh{
             border-color: lightgrey;
@@ -219,26 +224,26 @@
                 <fieldset class="crop-anh">
                     <legend>Crop ảnh</legend>
                     <label for="leftRange">Từ Trái qua:</label>
-                    <input type="range" id="leftRange" name="left" min="0" max="100" value="0" oninput="updatePosition('left', this.value)">
-                    <span id="leftValue">0</span>
+                    <input type="range" id="leftRange" name="left" min="00" max="99" value="00" oninput="updatePosition('left', this.value)">
+                    <span id="leftValue">00</span>
                     <span class="arrow-up" onclick="incrementSlider('leftRange')">▲</span>
                     <span class="arrow-down" onclick="decrementSlider('leftRange')">▼</span>
                     <br>
                     <label for="rightRange">Từ Phải qua:</label>
-                    <input type="range" id="rightRange" name="right" min="0" max="100" value="100" oninput="updatePosition('right', this.value)">
-                    <span id="rightValue">100</span>
+                    <input type="range" id="rightRange" name="right" min="0" max="99" value="99" oninput="updatePosition('right', this.value)">
+                    <span id="rightValue">99</span>
                     <span class="arrow-up" onclick="incrementSlider('rightRange')">▲</span>
                     <span class="arrow-down" onclick="decrementSlider('rightRange')">▼</span>
                     <br>
                     <label for="topRange">Từ Trên xuống:</label>
-                    <input type="range" id="topRange" name="top" min="0" max="100" value="0" oninput="updatePosition('top', this.value)">
+                    <input type="range" id="topRange" name="top" min="0" max="99" value="0" oninput="updatePosition('top', this.value)">
                     <span id="topValue">0</span>
                     <span class="arrow-up" onclick="incrementSlider('topRange')">▲</span>
                     <span class="arrow-down" onclick="decrementSlider('topRange')">▼</span>
                     <br>
                     <label for="bottomRange">Từ Dưới lên:</label>
-                    <input type="range" id="bottomRange" name="bottom" min="0" max="100" value="100" oninput="updatePosition('bottom', this.value)">
-                    <span id="bottomValue">100</span>
+                    <input type="range" id="bottomRange" name="bottom" min="0" max="99" value="99" oninput="updatePosition('bottom', this.value)">
+                    <span id="bottomValue">99</span>
                     <span class="arrow-up" onclick="incrementSlider('bottomRange')">▲</span>
                     <span class="arrow-down" onclick="decrementSlider('bottomRange')">▼</span>
                 </fieldset>

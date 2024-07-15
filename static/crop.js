@@ -16,6 +16,11 @@ function previewFile() {
     }
 }
 
+// Định dạng giá trị để thêm số 0 vào đầu nếu giá trị có một chữ số
+function formatValue(value) {
+    return value.toString().padStart(2, '0');
+}
+
 // Cập nhật giá trị ngưỡng và hiển thị lên giao diện
 function updateThresholdValue(value) {
     document.getElementById('thresholdValue').textContent = value;
@@ -24,8 +29,9 @@ function updateThresholdValue(value) {
 
 // Cập nhật giá trị vị trí và hiển thị lên giao diện
 function updatePosition(position, value) {
-    document.getElementById(position + 'Value').textContent = value;
-    updateAndPreview(); // Gọi hàm updateAndPreview khi thay đổi giá trị vị trí
+    const formattedValue = formatValue(value);
+    document.getElementById(position + 'Value').textContent = formattedValue;
+    updateAndPreview(); // Gọi hàm updateAndPreview khi thay đổi giá trị thanh trượt
 }
 
 // Hàm để cập nhật và xem trước ảnh khi kéo thanh trượt
