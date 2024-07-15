@@ -52,8 +52,9 @@
             text-align: center;
             max-width: 100%;
             overflow: hidden;
-            border: 1px solid #ccc;
+            border: 1px solid black;
             border-radius: 4px;
+            
         }
         
         .preview-image {
@@ -127,8 +128,9 @@
             text-align: center;
             max-width: 100%;
             overflow: hidden;
-            border: 1px solid #ccc;
+            border: 1px solid black;
             border-radius: 4px;
+            
         }
 
         .slider-container {
@@ -189,7 +191,10 @@
             vertical-align: middle;
             margin-left: 0px; /* Khoảng cách giữa mũi tên và số giá trị */
         }
-        
+        .crop-anh{
+            border-color: lightgrey;
+            border-style: solid;
+        }
     </style>
 </head>
 <body>
@@ -199,7 +204,7 @@
         <h2>Ảnh gốc</h2>
         <h2>Xem trước</h2>
     </div>
-    <div class="container">
+    <div class="container" style="background-color: azure;">
         <!-- Column 1: Controls -->
         <div class="column controls">
             <form method="POST" enctype="multipart/form-data" id="imageForm">
@@ -255,13 +260,13 @@
             </form>
         </div>
         <!-- Column 2: Original Image -->
-        <div class="column">
+        <div class="column" style="background-color: mintcream; border: 2px solid whitesmoke; border-radius: 25px;" >
             <div class="preview-container">
                 <img id="preview-image" class="preview-image" src="#" alt="Preview Image" style="display: none;">
             </div>
         </div>
         <!-- Column 3: Processed Image Preview -->
-        <div class="column">
+        <div class="column" style="background-color: white; border: 2px solid whitesmoke; border-radius: 25px;">
             <div class="preview-container">
                 <img id="processed-preview" class="preview-image" src="#" alt="Processed Image" style="display: none;">
             </div>
