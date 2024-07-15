@@ -148,7 +148,7 @@
                     <input type="file" name="image" accept="image/*" required onchange="previewFile()">
                 </label>
                 <br>
-                <label style="font-weight: bold;" for="thresholdRange">Ngưỡng xóa nền:</label>
+                <label style="font-weight: bold;color: darkblue" for="thresholdRange">Ngưỡng xóa nền:</label>
                 <input type="range" id="thresholdRange" name="threshold" min="0" max="255" value="160" oninput="updateThresholdValue(this.value)">
                 <span id="thresholdValue">160</span>
                 <br><br>
@@ -179,8 +179,8 @@
                                                                                 margin-top: 10px; width: 200px">Xem trước</button>
                     <br>
                     <!-- Nút tải về -->
-                    <button id="downloadButton" style="display: none; padding: 10px 20px; cursor: pointer; border: none;
-                                                      border-radius: 4px; background-color: orange; color: yellow; margin-top: 10px; width: 150px">
+                    <button id="downloadButton" style="display:block; padding: 10px 20px; cursor: pointer; border: none;
+                                                      border-radius: 4px; background-color: orange; color: black; margin-top: 10px; width: 150px">
                                                       Tải ảnh đã xử lý</button>
                     <br>
                     <a style="width: 70px; height:15px" href="/" class="back-button">Quay lại</a>
