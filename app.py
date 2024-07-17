@@ -9,6 +9,7 @@ import cv2
 import numpy as np
 
 app = Flask(__name__)
+app.config['STATIC_FOLDER'] = 'static' 
 app.secret_key = 'supersecretkey'
 
 UPLOAD_FOLDER = 'uploads'
@@ -53,6 +54,8 @@ def remove_background(image_bytes, threshold=200, left=0, right=100, top=0, bott
     except Exception as e:
         print(f"Exception: {e}")
         return None
+
+
 
 
 # Hàm chuyển đổi PDF sang PNG sử dụng ConvertAPI
@@ -119,8 +122,6 @@ def crop_preview():
     else:
         flash("Failed to process image preview. Please try again.")
         return redirect(url_for('tachnen'))
-
-
 
 @app.route('/pdf2image', methods=['GET', 'POST'])
 def pdf2image():

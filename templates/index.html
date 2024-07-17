@@ -16,11 +16,15 @@
             justify-content: center;
             height: 100vh;
             text-align: center;
+            background-size: cover; /* Đảm bảo hình nền bao phủ toàn bộ nền */
+            background-image: url("../static/img/hinhnen2.jpg");
+            background-position: center;
+            
         }
         h1 {
             color: #333;
             font-size: 2.5em;
-            margin-bottom: 20px;
+            margin-bottom: 130px;
         }
         .tool-container {
             display: flex;
@@ -56,12 +60,13 @@
             width: 100%;
             text-align: center;
             color: #777;
+            color: black;
             font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <h1 style="color: darkblue;">TỔNG HỢP CÁC CÔNG CỤ - CTICT</h1>
+    <h1 style="color: red;">TỔNG HỢP CÁC CÔNG CỤ HỖ TRỢ</h1>
     <div class="tool-container">
         <a href="/tachnen" class="tool-button">
             <span class="tool-icon">🌄</span>
@@ -90,6 +95,8 @@
     function showPopup() {
             alert("Tính năng đang phát triển. Vui lòng quay lại sau...!");
         }
+
+    
 </script>    
 
 </body>

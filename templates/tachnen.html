@@ -11,6 +11,7 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            background-image: url("../static/img/samac.jpg");
         }
         
         .container {
@@ -54,7 +55,6 @@
             overflow: hidden;
             border: 1px solid black;
             border-radius: 4px;
-            
         }
         
         .preview-image {
@@ -130,7 +130,6 @@
             overflow: hidden;
             border: 1px solid black;
             border-radius: 4px;
-            
         }
 
         .slider-container {
@@ -212,7 +211,7 @@
     <div class="container" style="background-color: azure;">
         <!-- Column 1: Controls -->
         <div class="column controls">
-            <form method="POST" enctype="multipart/form-data" id="imageForm">
+            <form method="POST" enctype="multipart/form-data" id="imageForm" action="/tachnen">
                 <label class="custom-file-upload">
                     <input type="file" name="image" accept="image/*" required onchange="previewFile()">
                 </label>
@@ -237,7 +236,7 @@
                     <br>
                     <label for="topRange">Từ Trên xuống:</label>
                     <input type="range" id="topRange" name="top" min="0" max="99" value="0" oninput="updatePosition('top', this.value)">
-                    <span id="topValue">0</span>
+                    <span id="topValue">00</span>
                     <span class="arrow-up" onclick="incrementSlider('topRange')">▲</span>
                     <span class="arrow-down" onclick="decrementSlider('topRange')">▼</span>
                     <br>
