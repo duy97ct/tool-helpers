@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,18 +49,18 @@
                     </div>
                     <button type="submit" class="btn btn-primary mb-3">Chuyển đổi định dạng</button>
                     <br>
-                    <a href="/" class="tool-button mt-2">
+                    <a style="width: 180px; text-align:center" href="/" class="tool-button mt-2">
                         <span class="tool-icon">←</span>
                         Quay lại
                     </a>
                 </form>
                 {% if image_url %}
-                <button type="button" class="btn btn-success mt-3" onclick="downloadImage('{{ image_url }}')">
+                <button style="width: 180px" type="button" class="btn btn-success mt-3" onclick="downloadImage('{{ image_url }}')">
                     Tải ảnh
                 </button>
                 {% endif %}
                 <br>
-                <button style="background-color: blue;" type="button" class="btn btn-success mt-3" onclick="#">
+                <button style="background-color: blue; width: 180px" type="button" class="btn btn-success mt-3" onclick="#">
                     Chuyển tách nền
                 </button>
             </div>
