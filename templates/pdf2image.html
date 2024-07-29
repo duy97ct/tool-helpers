@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chuyển đổi PDF sang Ảnh</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             padding: 20px;
@@ -58,9 +57,10 @@
                 <button style="width: 180px" type="button" class="btn btn-success mt-3" onclick="downloadImage('{{ image_url }}')">
                     Tải ảnh
                 </button>
+                <input type="hidden" id="imageUrl" value="{{ image_url }}">
                 {% endif %}
                 <br>
-                <button style="background-color: blue; width: 180px" type="button" class="btn btn-success mt-3" onclick="#">
+                <button style="background-color: blue; width: 180px" type="button" class="btn btn-success mt-3" onclick="processImage()">
                     Chuyển tách nền
                 </button>
             </div>
@@ -99,10 +99,46 @@
             link.click();
             document.body.removeChild(link);
         }
+
+        function processImage() {
+            const imageUrlInput = document.getElementById('imageUrl');
+            if (!imageUrlInput) {
+                alert('Image URL input element not found.');
+                return;
+            }
+
+            const imageUrl = imageUrlInput.value;
+
+            if (!imageUrl) {
+                alert('No image available for processing.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image_url', imageUrl);
+
+            fetch('/save_to_uploads', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.text();  // Chúng ta chỉ cần một thông báo đơn giản từ server
+            })
+            .then(message => {
+                alert('Image has been saved to uploads successfully.');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to save the image.');
+            });
+        }
     </script>
     
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-b4A7jRgcyJWB1FlEoEjZeYUnjwPZcB4rnrmnUVwBhO+6z0wPq3cLr5qd/0JcXxCr" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh/jLGBTQ+Y3OvI3UjLIZcAazfDDN9aHpuuXr" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

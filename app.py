@@ -1,16 +1,20 @@
 import os
 import requests
-from flask import Flask, request, render_template, send_file, redirect, url_for, flash
+from flask import Flask, request, render_template, send_file, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
 from PIL import Image
 import io
 import convertapi
 import cv2
 import numpy as np
+import random
+import string
 
 app = Flask(__name__)
 app.config['STATIC_FOLDER'] = 'static' 
 app.secret_key = 'supersecretkey'
+# Cấu hình thư mục upload
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -80,20 +84,21 @@ def index():
 
 @app.route('/tachnen', methods=['GET', 'POST'])
 def tachnen():
+    image_file = request.args.get('image_file')  # Lấy tên file từ query string
+    image_url = url_for('static', filename=f'uploads/{image_file}') if image_file else None
+    
     if request.method == 'POST':
         file = request.files.get('image')
         if file:
             image_bytes = file.read()
-            threshold = int(request.form.get('threshold', 200))  # Nhận giá trị ngưỡng từ request
+            threshold = int(request.form.get('threshold', 200))
             left = int(request.form.get('left', 0))
             right = int(request.form.get('right', 100))
             top = int(request.form.get('top', 0))
             bottom = int(request.form.get('bottom', 100))
             processed_file = remove_background(image_bytes, threshold=threshold, left=left, right=right, top=top, bottom=bottom)
             if processed_file:
-                # Lấy tên gốc của file
                 original_filename = file.filename.rsplit('.', 1)[0]
-                # Tạo tên file mới
                 download_name = f'{original_filename}_tach_nen.png'
                 return send_file(io.BytesIO(processed_file), mimetype='image/png', as_attachment=True, download_name=download_name)
             else:
@@ -102,7 +107,8 @@ def tachnen():
         else:
             flash("No file uploaded. Please upload an image.")
             return redirect(url_for('tachnen'))
-    return render_template('tachnen.html')
+    
+    return render_template('tachnen.html', image_url=image_url)
 
 @app.route('/crop_preview', methods=['POST'])
 def crop_preview():
@@ -151,6 +157,36 @@ def download_file(filename):
     else:
         flash('File not found.')
         return redirect(url_for('index'))
+
+@app.route('/save_to_uploads', methods=['POST'])
+def save_to_uploads():
+    if 'image_url' not in request.form:
+        return jsonify({'error': 'No image URL provided'}), 400
+
+    image_url = request.form['image_url']
+
+    # Giả định bạn có cách để lấy hình ảnh từ URL và lưu vào thư mục uploads
+    # Ví dụ, bạn có thể sử dụng requests để tải hình ảnh từ URL
+    import requests
+    from werkzeug.utils import secure_filename
+    import os
+
+    # Tải ảnh từ URL và lưu vào thư mục uploads
+    response = requests.get(image_url)
+    if response.status_code == 200:
+        filename = secure_filename('image.png')  # Hoặc tạo tên file phù hợp
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        with open(file_path, 'wb') as f:
+            f.write(response.content)
+        return jsonify({'message': 'Image has been saved successfully', 'filename': filename}), 200
+    else:
+        return jsonify({'error': 'Failed to download image'}), 500
+
+def generate_random_string(length=6):
+    """Tạo chuỗi ngẫu nhiên dài `length` ký tự."""
+    import random
+    import string
+    return ''.join(random.choices(string.digits, k=length))
 
 
 if __name__ == '__main__':
